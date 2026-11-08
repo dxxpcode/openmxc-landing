@@ -11,220 +11,225 @@
   :root {
     color-scheme: light dark;
     --bg: #ffffff;
-    --ink: #0a0a0a;
-    --muted: #6b6b6b;
-    --line: #e8e8e8;
-    --nav-bg: rgba(255,255,255,0.72);
-    --hover: #f4f4f4;
-    --hover-line: #d8d8d8;
-    --glow: rgba(10,10,10,0.045);
-    --btn-bg: #0a0a0a;
-    --btn-fg: #ffffff;
-    --btn-hover: #262626;
-    --btn2-border: #e0e0e0;
-    --btn2-bg: #ffffff;
-    --btn2-fg: #0a0a0a;
-    --btn2-hover: #f4f4f4;
+    --fg: #0a0a0a;
+    --muted-fg: #666666;
+    --border: #e8e8e8;
+    --btn-hover: rgba(0,0,0,0.04);
+    --pill-hover: #f5f5f5;
+    --toggle-border: transparent;
   }
   @media (prefers-color-scheme: dark) {
     :root {
       --bg: #000000;
-      --ink: #f5f5f5;
-      --muted: #8a8a8a;
-      --line: #1c1c1c;
-      --nav-bg: rgba(0,0,0,0.72);
-      --hover: rgba(255,255,255,0.08);
-      --hover-line: #2c2c2c;
-      --glow: rgba(255,255,255,0.05);
-      --btn-bg: #f5f5f5;
-      --btn-fg: #0a0a0a;
-      --btn-hover: #e0e0e0;
-      --btn2-border: #2c2c2c;
-      --btn2-bg: transparent;
-      --btn2-fg: #f5f5f5;
-      --btn2-hover: rgba(255,255,255,0.06);
+      --fg: #fafafa;
+      --muted-fg: #8f8f8f;
+      --border: #212121;
+      --btn-hover: rgba(255,255,255,0.06);
+      --pill-hover: #111111;
     }
     .brand img { filter: invert(1); }
   }
   html[data-theme="dark"] {
     --bg: #000000;
-    --ink: #f5f5f5;
-    --muted: #8a8a8a;
-    --line: #1c1c1c;
-    --nav-bg: rgba(0,0,0,0.72);
-    --hover: rgba(255,255,255,0.08);
-    --hover-line: #2c2c2c;
-    --glow: rgba(255,255,255,0.05);
-    --btn-bg: #f5f5f5;
-    --btn-fg: #0a0a0a;
-    --btn-hover: #e0e0e0;
-    --btn2-border: #2c2c2c;
-    --btn2-bg: transparent;
-    --btn2-fg: #f5f5f5;
-    --btn2-hover: rgba(255,255,255,0.06);
+    --fg: #fafafa;
+    --muted-fg: #8f8f8f;
+    --border: #212121;
+    --btn-hover: rgba(255,255,255,0.06);
+    --pill-hover: #111111;
   }
   html[data-theme="dark"] .brand img { filter: invert(1); }
   html[data-theme="light"] {
     --bg: #ffffff;
-    --ink: #0a0a0a;
-    --muted: #6b6b6b;
-    --line: #e8e8e8;
-    --nav-bg: rgba(255,255,255,0.72);
-    --hover: #f4f4f4;
-    --hover-line: #d8d8d8;
-    --glow: rgba(10,10,10,0.045);
-    --btn-bg: #0a0a0a;
-    --btn-fg: #ffffff;
-    --btn-hover: #262626;
-    --btn2-border: #e0e0e0;
-    --btn2-bg: #ffffff;
-    --btn2-fg: #0a0a0a;
-    --btn2-hover: #f4f4f4;
+    --fg: #0a0a0a;
+    --muted-fg: #666666;
+    --border: #e8e8e8;
+    --btn-hover: rgba(0,0,0,0.04);
+    --pill-hover: #f5f5f5;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
   body {
-    font-family: 'Geist', -apple-system, BlinkMacSystemFont, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Geist', -apple-system, BlinkMacSystemFont, "Inter", "Helvetica Neue", "Segoe UI", sans-serif;
     background: var(--bg);
-    color: var(--ink);
+    color: var(--fg);
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
   }
+  ::selection { background: color-mix(in srgb, var(--fg) 14%, transparent); }
 
-  nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    display: flex;
+  /* Header — mirrors dxxp.codes: 3-column grid, centered logo, toggle right */
+  header {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    justify-content: space-between;
-    padding: 20px 48px;
-    background: var(--nav-bg);
-    backdrop-filter: saturate(180%) blur(20px);
-    -webkit-backdrop-filter: saturate(180%) blur(20px);
-    border-bottom: 1px solid transparent;
-    transition: border-color .3s ease;
-    z-index: 10;
+    height: 64px;
+    padding: 0 24px;
   }
-  nav.scrolled { border-bottom-color: var(--line); }
-  .brand { display: flex; align-items: center; text-decoration: none; }
-  .brand img { width: 22px; height: 22px; }
-  .nav-actions { display: flex; align-items: center; gap: 12px; }
+  .brand { justify-self: center; display: flex; align-items: center; text-decoration: none; }
+  .brand img { height: 18px; width: auto; display: block; }
+  .nav-right { justify-self: end; display: flex; align-items: center; gap: 20px; }
   .theme-toggle {
     width: 32px; height: 32px;
     display: flex; align-items: center; justify-content: center;
     background: transparent;
-    border: 1px solid var(--line);
+    border: none;
     border-radius: 50%;
-    color: var(--ink);
+    color: var(--muted-fg);
     cursor: pointer;
-    transition: background .2s ease, border-color .2s ease;
+    padding: 8px;
+    margin-right: -8px;
+    transition: color .2s ease;
   }
-  .theme-toggle:hover { background: var(--hover); border-color: var(--hover-line); }
-  .theme-toggle svg { width: 14px; height: 14px; }
+  .theme-toggle:hover { color: var(--fg); }
+  .theme-toggle svg { width: 16px; height: 16px; }
   .theme-toggle .icon-sun { display: none; }
   html[data-theme="dark"] .theme-toggle .icon-sun { display: block; }
   html[data-theme="dark"] .theme-toggle .icon-moon { display: none; }
 
-  .hero {
-    min-height: 100vh;
+  main {
+    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding: 120px 24px 80px;
-    position: relative;
-    overflow: hidden;
-  }
-  .hero::before {
-    content: "";
-    position: absolute;
-    top: -320px; left: 50%;
-    transform: translateX(-50%);
-    width: 900px; height: 900px;
-    background: radial-gradient(circle, var(--glow) 0%, rgba(0,0,0,0) 60%);
-    pointer-events: none;
+    padding: 0 24px 64px;
   }
   h1 {
-    font-size: clamp(44px, 7vw, 84px);
-    font-weight: 700;
-    letter-spacing: -0.035em;
-    line-height: 1.04;
-    max-width: 16ch;
+    font-size: 28px;
+    font-weight: 500;
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
   }
-  .cta-row {
-    margin-top: 40px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-  .btn {
-    display: inline-flex; align-items: center; gap: 8px;
-    font-size: 14.5px; font-weight: 500;
-    text-decoration: none;
-    padding: 11px 22px;
-    border-radius: 980px;
-    transition: transform .25s cubic-bezier(.2,.8,.2,1), background .2s ease, border-color .2s ease;
-  }
-  .btn:active { transform: translateY(0); }
-  .btn-primary {
-    background: var(--btn-bg); color: var(--btn-fg);
-  }
-  .btn-primary:hover { background: var(--btn-hover); transform: translateY(-1px); }
-  .btn-secondary {
-    background: var(--btn2-bg); color: var(--btn2-fg);
-    border: 1px solid var(--btn2-border);
-  }
-  .btn-secondary:hover { background: var(--btn2-hover); transform: translateY(-1px); }
-  .btn svg { width: 15px; height: 15px; }
-  .meta {
-    margin-top: 18px;
-    font-size: 12.5px; color: var(--muted);
-    letter-spacing: 0.01em;
+  @media (min-width: 640px) { h1 { font-size: 32px; } }
+  .gradient {
+    background: linear-gradient(to right, var(--fg), var(--muted-fg));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
   }
 
-  @media (max-width: 760px) {
-    nav { padding: 16px 24px; }
-    .cta-row { flex-direction: column; width: 100%; max-width: 280px; }
-    .btn { justify-content: center; }
+  .actions {
+    margin-top: 28px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 12px;
   }
+  .btn-primary {
+    height: 44px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 16px 0 20px;
+    border-radius: 999px;
+    background: var(--fg);
+    color: var(--bg);
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background .2s ease;
+  }
+  .btn-primary:hover { background: var(--btn-hover); }
+  .btn-primary svg { width: 16px; height: 16px; }
+  .btn-primary .arrow { opacity: 0.6; }
+  .download-col { display: flex; flex-direction: column; align-items: center; }
+  .build-label {
+    margin-top: 12px;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 11px;
+    color: var(--muted-fg);
+  }
+  .gh-pill {
+    height: 44px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 20px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    color: var(--fg);
+    font-size: 14px;
+    text-decoration: none;
+    transition: background .2s ease;
+  }
+  .gh-pill:hover { background: var(--pill-hover); }
+  .gh-pill svg.gh { width: 16px; height: 16px; }
+  .gh-pill .divider { width: 1px; height: 16px; background: var(--border); }
+  .gh-pill .star { width: 14px; height: 14px; fill: #f5a623; color: #f5a623; }
+  .gh-pill .count {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .quiet-line {
+    margin-top: 24px;
+    font-size: 13px;
+    color: var(--muted-fg);
+  }
+  .quiet-line a {
+    color: var(--fg);
+    opacity: 0.8;
+    text-decoration: none;
+    transition: opacity .2s ease;
+  }
+  .quiet-line a:hover { opacity: 1; text-decoration: underline; text-underline-offset: 4px; }
+
+  @keyframes gate-in {
+    from { opacity: 0; transform: translateY(6px) scale(0.98); }
+    to { opacity: 1; transform: none; }
+  }
+  .animate-in { animation: gate-in 0.22s ease-out both; }
+  .animate-in-late { animation: gate-in 0.22s ease-out 0.08s both; }
 </style>
 </head>
 <body>
 
-<nav id="nav">
-  <a class="brand" href="#" aria-label="OPENMXC home">
+<header>
+  <span></span>
+  <a class="brand" href="#" aria-label="OPENMXC">
     <img src="openmxc-logo.png" alt="OPENMXC">
   </a>
-  <div class="nav-actions">
+  <div class="nav-right">
     <button id="themeToggle" class="theme-toggle" aria-label="Toggle appearance">
       <svg class="icon-sun" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="8" cy="8" r="3"/><path d="M8 1.5v1.5M8 13v1.5M1.5 8H3M13 8h1.5M3.4 3.4l1 1M11.6 11.6l1 1M12.6 3.4l-1 1M4.4 11.6l-1 1"/></svg>
       <svg class="icon-moon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13.5 9.5A6 6 0 0 1 6.5 2.5a6 6 0 1 0 7 7Z"/></svg>
     </button>
   </div>
-</nav>
+</header>
 
-<section class="hero">
-  <h1>The web, exactly as it should be.</h1>
-  <div class="cta-row">
-    <a class="btn btn-primary" href="#download">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></svg>
-      Download for macOS
-    </a>
-    <a class="btn btn-secondary" href="https://github.com/dxxpcode/openmxc" target="_blank" rel="noopener">
-      <svg class="gh-logo" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+<main>
+  <h1>The web, <span class="gradient">exactly as it should be.</span></h1>
+
+  <div class="actions animate-in">
+    <div class="download-col">
+      <a class="btn-primary" href="https://github.com/dxxpcode/openmxc/releases" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></svg>
+        Download for macOS
+        <svg class="arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2.5v8M4.5 7 8 10.5 11.5 7M2.5 13.5h11"/></svg>
+      </a>
+      <p class="build-label">macOS 26+ · Apple Silicon &amp; Intel</p>
+    </div>
+
+    <a class="gh-pill animate-in-late" href="https://github.com/dxxpcode/openmxc" target="_blank" rel="noopener" id="ghPill">
+      <svg class="gh" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
       GitHub
+      <span class="divider" id="ghDivider" hidden></span>
+      <svg class="star" id="ghStar" viewBox="0 0 24 24" hidden><path d="M12 2l2.9 6.26 6.6.57-5 4.4 1.5 6.5L12 16.9 5.99 19.7l1.5-6.5-5-4.4 6.6-.57z"/></svg>
+      <span class="count" id="ghCount" hidden></span>
     </a>
   </div>
-  <div class="meta">Free forever · macOS 26+ · Open source</div>
-</section>
+
+  <p class="quiet-line animate-in-late">Free forever — no accounts, no ads, no tracking.</p>
+</main>
 
 <script>
-  const nav = document.getElementById('nav');
-  addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 8), { passive: true });
-
   const root = document.documentElement;
   const toggle = document.getElementById('themeToggle');
   const systemDark = matchMedia('(prefers-color-scheme: dark)');
@@ -238,6 +243,20 @@
     localStorage.setItem('openmxc-theme', next);
     apply();
   });
+
+  // Live GitHub star count (same idea as dxxp.codes' GitHubStars)
+  const compact = new Intl.NumberFormat('en', { notation: 'compact', maximumFractionDigits: 1 });
+  fetch('https://api.github.com/repos/dxxpcode/openmxc', { headers: { Accept: 'application/vnd.github+json' } })
+    .then((r) => r.ok ? r.json() : null)
+    .then((d) => {
+      const stars = d && typeof d.stargazers_count === 'number' ? d.stargazers_count : null;
+      if (!stars) return;
+      document.getElementById('ghCount').textContent = compact.format(stars);
+      document.getElementById('ghCount').hidden = false;
+      document.getElementById('ghStar').hidden = false;
+      document.getElementById('ghDivider').hidden = false;
+    })
+    .catch(() => {});
 </script>
 </body>
 </html>
