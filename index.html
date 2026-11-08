@@ -6,11 +6,36 @@
 <title>OPENMXC — A browser that gets out of your way</title>
 <style>
   :root {
+    color-scheme: light dark;
     --bg: #ffffff;
     --ink: #0a0a0a;
     --muted: #6b6b6b;
     --line: #e8e8e8;
     --card: #fafafa;
+    --nav-bg: rgba(255,255,255,0.72);
+    --hover: #f4f4f4;
+    --hover-line: #d8d8d8;
+    --glow: rgba(10,10,10,0.045);
+    --btn-bg: #0a0a0a;
+    --btn-fg: #ffffff;
+    --btn-hover: #262626;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #000000;
+      --ink: #f5f5f5;
+      --muted: #8a8a8a;
+      --line: #1c1c1c;
+      --card: #0a0a0a;
+      --nav-bg: rgba(0,0,0,0.72);
+      --hover: rgba(255,255,255,0.08);
+      --hover-line: #2c2c2c;
+      --glow: rgba(255,255,255,0.05);
+      --btn-bg: #f5f5f5;
+      --btn-fg: #0a0a0a;
+      --btn-hover: #e0e0e0;
+    }
+    .brand img, footer .brand img { filter: invert(1); }
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { scroll-behavior: smooth; }
@@ -30,7 +55,7 @@
     align-items: center;
     justify-content: space-between;
     padding: 20px 48px;
-    background: rgba(255,255,255,0.72);
+    background: var(--nav-bg);
     backdrop-filter: saturate(180%) blur(20px);
     -webkit-backdrop-filter: saturate(180%) blur(20px);
     border-bottom: 1px solid transparent;
@@ -49,7 +74,7 @@
     border-radius: 980px;
     transition: background .2s ease, border-color .2s ease;
   }
-  .nav-cta:hover { background: #f4f4f4; border-color: #d8d8d8; }
+  .nav-cta:hover { background: var(--hover); border-color: var(--hover-line); }
 
   /* ---------- Hero ---------- */
   .hero {
@@ -69,7 +94,7 @@
     top: -320px; left: 50%;
     transform: translateX(-50%);
     width: 900px; height: 900px;
-    background: radial-gradient(circle, rgba(10,10,10,0.045) 0%, rgba(10,10,10,0) 60%);
+    background: radial-gradient(circle, var(--glow) 0%, rgba(0,0,0,0) 60%);
     pointer-events: none;
   }
   h1 {
@@ -95,14 +120,14 @@
   }
   .btn-primary {
     display: inline-flex; align-items: center; gap: 8px;
-    background: var(--ink); color: #fff;
+    background: var(--btn-bg); color: var(--btn-fg);
     font-size: 15px; font-weight: 500;
     text-decoration: none;
     padding: 13px 26px;
     border-radius: 980px;
     transition: transform .25s cubic-bezier(.2,.8,.2,1), background .2s ease;
   }
-  .btn-primary:hover { background: #262626; transform: translateY(-1px); }
+  .btn-primary:hover { background: var(--btn-hover); transform: translateY(-1px); }
   .btn-primary:active { transform: translateY(0); }
   .btn-primary svg { width: 15px; height: 15px; }
   .meta {
