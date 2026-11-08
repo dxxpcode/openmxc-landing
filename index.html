@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OPENMXC — A browser that gets out of your way</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --ink: #0a0a0a;
+    --muted: #6b6b6b;
+    --line: #e8e8e8;
+    --card: #fafafa;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* ---------- Nav ---------- */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 48px;
+    background: rgba(255,255,255,0.72);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border-bottom: 1px solid transparent;
+    transition: border-color .3s ease;
+    z-index: 10;
+  }
+  nav.scrolled { border-bottom-color: var(--line); }
+  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); }
+  .brand img { width: 22px; height: 22px; }
+  .brand span { font-size: 15px; font-weight: 600; letter-spacing: 0.02em; }
+  .nav-cta {
+    font-size: 13.5px; font-weight: 500;
+    color: var(--ink); text-decoration: none;
+    padding: 7px 16px;
+    border: 1px solid var(--line);
+    border-radius: 980px;
+    transition: background .2s ease, border-color .2s ease;
+  }
+  .nav-cta:hover { background: #f4f4f4; border-color: #d8d8d8; }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 140px 24px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: "";
+    position: absolute;
+    top: -320px; left: 50%;
+    transform: translateX(-50%);
+    width: 900px; height: 900px;
+    background: radial-gradient(circle, rgba(10,10,10,0.045) 0%, rgba(10,10,10,0) 60%);
+    pointer-events: none;
+  }
+  .eyebrow {
+    font-size: 12.5px; font-weight: 600;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 28px;
+  }
+  h1 {
+    font-size: clamp(44px, 7vw, 88px);
+    font-weight: 700;
+    letter-spacing: -0.035em;
+    line-height: 1.04;
+    max-width: 14ch;
+  }
+  .sub {
+    margin-top: 26px;
+    font-size: clamp(16px, 2vw, 20px);
+    color: var(--muted);
+    line-height: 1.55;
+    max-width: 46ch;
+    font-weight: 400;
+  }
+  .cta-row {
+    margin-top: 44px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--ink); color: #fff;
+    font-size: 15px; font-weight: 500;
+    text-decoration: none;
+    padding: 13px 26px;
+    border-radius: 980px;
+    transition: transform .25s cubic-bezier(.2,.8,.2,1), background .2s ease;
+  }
+  .btn-primary:hover { background: #262626; transform: translateY(-1px); }
+  .btn-primary:active { transform: translateY(0); }
+  .btn-primary svg { width: 15px; height: 15px; }
+  .meta {
+    margin-top: 16px;
+    font-size: 12.5px; color: #a3a3a3;
+    letter-spacing: 0.01em;
+  }
+
+  /* ---------- Product mock ---------- */
+  .stage {
+    width: 100%;
+    max-width: 1060px;
+    margin: 90px auto 0;
+    padding: 0 24px 120px;
+  }
+  .mock {
+    border-radius: 14px;
+    border: 1px solid var(--line);
+    box-shadow:
+      0 1px 2px rgba(0,0,0,0.04),
+      0 12px 32px -8px rgba(0,0,0,0.10),
+      0 48px 96px -32px rgba(0,0,0,0.14);
+    overflow: hidden;
+    background: #000;
+  }
+  .mock-bar {
+    height: 46px;
+    background: #000;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 0 16px;
+  }
+  .mock-dot { width: 11px; height: 11px; border-radius: 50%; }
+  .mock-field {
+    flex: 1;
+    max-width: 460px;
+    margin: 0 auto;
+    height: 28px;
+    border-radius: 980px;
+    background: #161616;
+    border: 1px solid #262626;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+  }
+  .mock-field .lock { width: 9px; height: 9px; border-radius: 2px; border: 1.5px solid #5a5a5a; }
+  .mock-field .url { font-size: 11px; color: #8a8a8a; letter-spacing: 0.02em; }
+  .mock-actions { display: flex; gap: 12px; }
+  .mock-actions i {
+    width: 14px; height: 14px; border-radius: 4px;
+    border: 1.5px solid #4a4a4a; display: block;
+  }
+  .mock-actions i.round { border-radius: 50%; }
+  .mock-body {
+    background: #000;
+    padding: 90px 24px 110px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .mock-body img { width: 54px; height: 54px; margin-bottom: 26px; filter: brightness(0) invert(1); }
+  .mock-search {
+    width: 100%; max-width: 480px;
+    height: 46px;
+    border-radius: 980px;
+    background: #111;
+    border: 1px solid #2a2a2a;
+    display: flex; align-items: center; justify-content: center;
+    color: #666; font-size: 13.5px; letter-spacing: 0.01em;
+  }
+  .mock-favs {
+    margin-top: 44px;
+    display: flex; gap: 22px;
+  }
+  .mock-fav {
+    width: 64px;
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+  }
+  .mock-fav .tile {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    background: #171717;
+    border: 1px solid #262626;
+  }
+  .mock-fav .label { font-size: 10.5px; color: #555; }
+
+  /* ---------- Features ---------- */
+  .features {
+    border-top: 1px solid var(--line);
+    padding: 110px 24px;
+  }
+  .features-inner {
+    max-width: 1060px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 48px;
+  }
+  .feature h3 {
+    font-size: 17px; font-weight: 600;
+    letter-spacing: -0.01em;
+    margin-bottom: 10px;
+  }
+  .feature p {
+    font-size: 14.5px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+  .feature .num {
+    font-size: 12px; font-weight: 600;
+    color: #b5b5b5;
+    letter-spacing: 0.1em;
+    margin-bottom: 18px;
+    display: block;
+  }
+
+  /* ---------- Footer ---------- */
+  footer {
+    border-top: 1px solid var(--line);
+    padding: 36px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  footer .brand span { color: var(--muted); font-weight: 500; }
+  footer p { font-size: 12.5px; color: #a3a3a3; }
+
+  @media (max-width: 760px) {
+    nav { padding: 16px 24px; }
+    .features-inner { grid-template-columns: 1fr; gap: 40px; }
+    footer { flex-direction: column; gap: 10px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <a class="brand" href="#">
+    <img src="openmxc-logo.png" alt="OPENMXC">
+    <span>OPENMXC</span>
+  </a>
+  <a class="nav-cta" href="#download">Download</a>
+</nav>
+
+<section class="hero">
+  <div class="eyebrow">Native macOS browser</div>
+  <h1>The web, exactly as it should be.</h1>
+  <p class="sub">OPENMXC is a fast, private, native macOS browser built on WebKit. No accounts, no tracking, no noise — just the page.</p>
+  <div class="cta-row">
+    <a class="btn-primary" href="#download">
+      Download for macOS
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v8M4.5 6.5 8 10l3.5-3.5M2.5 12.5h11"/></svg>
+    </a>
+  </div>
+  <div class="meta">Free forever · macOS 26+ · Open source</div>
+</section>
+
+<section class="stage">
+  <div class="mock">
+    <div class="mock-bar">
+      <span class="mock-dot" style="background:#ff5f57"></span>
+      <span class="mock-dot" style="background:#febc2e"></span>
+      <span class="mock-dot" style="background:#28c840"></span>
+      <div class="mock-field">
+        <span class="lock"></span>
+        <span class="url">Search or enter address</span>
+      </div>
+      <div class="mock-actions">
+        <i></i><i class="round"></i><i></i>
+      </div>
+    </div>
+    <div class="mock-body">
+      <img src="openmxc-logo.png" alt="OPENMXC">
+      <div class="mock-search">Search or enter address</div>
+      <div class="mock-favs">
+        <div class="mock-fav"><div class="tile"></div><div class="label">Wikipedia</div></div>
+        <div class="mock-fav"><div class="tile"></div><div class="label">Apple</div></div>
+        <div class="mock-fav"><div class="tile"></div><div class="label">GitHub</div></div>
+        <div class="mock-fav"><div class="tile"></div><div class="label">Docs</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="features">
+  <div class="features-inner">
+    <div class="feature">
+      <span class="num">01</span>
+      <h3>Native by design</h3>
+      <p>SwiftUI and WebKit, tuned for macOS. Every interaction feels like it belongs on your Mac.</p>
+    </div>
+    <div class="feature">
+      <span class="num">02</span>
+      <h3>Private by default</h3>
+      <p>Built-in tracker blocking, per-site permissions, and private windows. Your data stays on your Mac.</p>
+    </div>
+    <div class="feature">
+      <span class="num">03</span>
+      <h3>Yours, forever</h3>
+      <p>Free, open source, and local-first. No accounts, no subscriptions, no ads — ever.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <a class="brand" href="#">
+    <img src="openmxc-logo.png" alt="">
+    <span>OPENMXC</span>
+  </a>
+  <p>© 2026 OPENMXC. Built for macOS.</p>
+</footer>
+
+<script>
+  const nav = document.getElementById('nav');
+  addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 8), { passive: true });
+</script>
+</body>
+</html>
